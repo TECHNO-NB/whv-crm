@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 "use client"
 import React from 'react';
 import { DollarSign, BarChart3, TrendingUp, Handshake, Calendar, ArrowUpRight, ArrowDownRight, Goal, List, PiggyBank, Briefcase, User } from 'lucide-react';

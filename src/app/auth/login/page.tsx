@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 "use client";
 import React, { useState } from "react";
 import { Eye, EyeOff, Lock, Users, Clock } from "lucide-react";

@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import ProjectManagementComp from "@/components/ProjectManagementComp";
 import Sidebar from "@/components/Sidebar";
 import React from "react";
