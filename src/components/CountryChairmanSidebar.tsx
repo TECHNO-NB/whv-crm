@@ -144,6 +144,7 @@ export default function CountryManagerSidebar() {
         </nav>
 
         {/* Footer */}
+        {/* @ts-ignore */}
         <div className="border-t border-gray-100 dark:border-gray-800 px-4 py-4 flex-shrink-0">
           <button className="flex items-center gap-3 text-gray-600 dark:text-gray-300 hover:text-red-600 transition-colors text-sm font-medium w-full">
             <LogOut size={18} />
