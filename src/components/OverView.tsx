@@ -125,6 +125,8 @@ const QuickActionButton = ({
 
 // --- Main Dashboard Overview Component ---
 export default function DashboardOverviewPage({ data }: any) {
+
+  if(!data) return null;
   return (
     <div className="  mt-8">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
