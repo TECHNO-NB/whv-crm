@@ -118,9 +118,11 @@ export default function CountryManagerSidebar() {
               <Link
                 key={item.name}
                 href={item.href}
+                
                 className={cn(
                   "flex w-full items-center relative gap-3 rounded-xl px-4 py-2.5 text-sm font-medium transition-all duration-150",
                   active
+                  
                     ? "bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-md"
                     : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
                 )}
