@@ -210,7 +210,7 @@ const RoleChangeDialog: React.FC<RoleChangeDialogProps> = ({
               <SelectContent>
                 {ALL_ROLES.map((role) => (
                   <SelectItem key={role} value={role}>
-                    {role.toUpperCase()}
+                    {role}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -384,7 +384,7 @@ const UserManagementPage: React.FC = () => {
         <TabsList>
           <TabsTrigger value="All">All</TabsTrigger>
           {ALL_ROLES.map((role) => (
-            <TabsTrigger key={role} value={role}>{role}</TabsTrigger>
+            <TabsTrigger key={role} value={role}>{role.toUpperCase()}</TabsTrigger>
           ))}
         </TabsList>
       </Tabs>
