@@ -210,7 +210,7 @@ const RoleChangeDialog: React.FC<RoleChangeDialogProps> = ({
               <SelectContent>
                 {ALL_ROLES.map((role) => (
                   <SelectItem key={role} value={role}>
-                    {role}
+                    {role.toUpperCase()}
                   </SelectItem>
                 ))}
               </SelectContent>
