@@ -16,9 +16,18 @@ import logo from "../../../../public/logo2.jpg";
 import Image from "next/image";
 import axios from "axios";
 import { toast, Toaster } from "react-hot-toast";
+import { addUser, userState } from "@/redux/userSlice";
+import { useDispatch } from "react-redux";
+import { useRouter } from "next/navigation";
 
 // Corrected FeatureBadge component to properly display the icon
-const FeatureBadge = ({ text, icon: Icon }: { text: string; icon: React.ElementType }) => (
+const FeatureBadge = ({
+  text,
+  icon: Icon,
+}: {
+  text: string;
+  icon: React.ElementType;
+}) => (
   <div className="flex items-center space-x-1 text-gray-500">
     <Icon className="w-3 h-3 text-orange-500" />
     <span className="text-xs">{text}</span>
@@ -29,6 +38,8 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
+  const router=useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,21 +52,39 @@ export default function LoginPage() {
     const loginToast = toast.loading("Logging in...");
 
     try {
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/login`, {
-        email,
-        password,
-      }, { withCredentials: true });
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/login`,
+        {
+          email,
+          password,
+        },
+        { withCredentials: true }
+      );
 
       if (res.data.success) {
+        const userData: userState = {
+          id: res.data.data.id,
+          countryId: res.data.data.country.id,
+          fullName: res.data.data.fullName,
+          email: res.data.data.email,
+          role: res.data.data.role,
+          countryName: res.data.data.country.countryName,
+        };
+        dispatch(addUser(userData));
+        if(res.data.data.role==="admin"){
+          router.push("/admin/dashboard")
+        }
         toast.success("Login successful!", { id: loginToast });
-        // Redirect user or do something after login
+
         console.log("User Data:", res.data.data);
       } else {
         toast.error(res.data.message || "Login failed", { id: loginToast });
       }
     } catch (error: any) {
       console.error(error);
-      toast.error(error?.response?.data?.message || "Something went wrong", { id: loginToast });
+      toast.error(error?.response?.data?.message || "Something went wrong", {
+        id: loginToast,
+      });
     }
   };
 
@@ -87,7 +116,10 @@ export default function LoginPage() {
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-6 px-6">
             <div className="space-y-2">
-              <label htmlFor="email" className="text-sm font-medium text-gray-700">
+              <label
+                htmlFor="email"
+                className="text-sm font-medium text-gray-700"
+              >
                 Email Address <span className="text-red-500">*</span>
               </label>
               <Input
@@ -102,7 +134,10 @@ export default function LoginPage() {
             </div>
 
             <div className="space-y-2">
-              <label htmlFor="password" className="text-sm font-medium text-gray-700">
+              <label
+                htmlFor="password"
+                className="text-sm font-medium text-gray-700"
+              >
                 Password <span className="text-red-500">*</span>
               </label>
               <div className="relative">
@@ -121,7 +156,11 @@ export default function LoginPage() {
                   className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 transition-colors"
                   aria-label={showPassword ? "Hide password" : "Show password"}
                 >
-                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  {showPassword ? (
+                    <EyeOff className="h-5 w-5" />
+                  ) : (
+                    <Eye className="h-5 w-5" />
+                  )}
                 </button>
               </div>
             </div>
@@ -154,7 +193,10 @@ export default function LoginPage() {
 
           <div className="text-center text-sm text-gray-500 pb-2 mt-4">
             Don't have an account?{" "}
-            <a href="/auth/register" className="text-orange-500 hover:underline font-medium">
+            <a
+              href="/auth/register"
+              className="text-orange-500 hover:underline font-medium"
+            >
               Register
             </a>
           </div>
