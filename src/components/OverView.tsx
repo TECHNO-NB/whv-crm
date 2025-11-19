@@ -246,7 +246,7 @@ export default function DashboardOverviewPage({ data }: any) {
       {/* Fixed Footer (Optional, based on your previous component) */}
       <footer className="mt-8 text-center text-sm text-gray-400">
         <p>
-          &copy; {new Date().getFullYear()} World Hindu Vision CRM. Dashboard
+          &copy; 2009 World Hindu Vision CRM. Dashboard
           overview.
         </p>
       </footer>

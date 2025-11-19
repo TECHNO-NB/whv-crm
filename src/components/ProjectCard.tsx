@@ -1,4 +1,3 @@
-
 // @ts-nocheck
 "use client";
 
@@ -18,9 +17,14 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+} from "@/components/ui/select";
 import toast from "react-hot-toast";
-
 
 interface ProjectCardProps {
   project: {
@@ -76,7 +80,9 @@ export default function ProjectCard({ project }: ProjectCardProps) {
       <CardContent className="p-5">
         {/* Header */}
         <div className="flex justify-between items-start">
-          <h2 className="text-lg font-semibold text-gray-800">{project.title}</h2>
+          <h2 className="text-lg font-semibold text-gray-800">
+            {project.title}
+          </h2>
           <div className="flex items-center gap-2">
             <Badge
               variant="secondary"
@@ -180,7 +186,9 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                         variant="outline"
                         onClick={() => {
                           if (!formData.newWorker.trim()) return;
-                          toast.success(`${formData.newWorker} added to project`);
+                          toast.success(
+                            `${formData.newWorker} added to project`
+                          );
                           setFormData({ ...formData, newWorker: "" });
                         }}
                       >
@@ -194,7 +202,10 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                   <Button variant="secondary" onClick={() => setOpen(false)}>
                     Cancel
                   </Button>
-                  <Button onClick={handleSave} className="bg-orange-500 text-white">
+                  <Button
+                    onClick={handleSave}
+                    className="bg-orange-500 text-white"
+                  >
                     Save Changes
                   </Button>
                 </DialogFooter>
@@ -228,7 +239,10 @@ export default function ProjectCard({ project }: ProjectCardProps) {
             <span>Progress</span>
             <span>{formData.progress}%</span>
           </div>
-          <Progress value={formData.progress} className="mt-1 h-2 bg-gray-200" />
+          <Progress
+            value={formData.progress}
+            className="mt-1 h-2 bg-gray-200"
+          />
         </div>
 
         {/* Budget & Team */}
@@ -255,9 +269,10 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                 key={i}
                 className="w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center text-xs font-semibold border-2 border-white"
               >
-                {w.name.charAt(0).toUpperCase()}
+                {w?.name?.trim()?.charAt(0)?.toUpperCase() ?? "?"}
               </div>
             ))}
+
             {project.workers && project.workers.length > 3 && (
               <div className="w-8 h-8 bg-gray-200 text-gray-600 rounded-full flex items-center justify-center text-xs font-semibold border-2 border-white">
                 +{project.workers.length - 3}

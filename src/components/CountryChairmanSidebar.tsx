@@ -26,11 +26,12 @@ import {
   School,
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { Badge } from "./ui/badge";
+import toast from "react-hot-toast";
 
 // ✅ Admin-specific menu configuration
 const adminMenu = [
@@ -51,6 +52,7 @@ export default function CountryManagerSidebar() {
   const [isOpen, setIsOpen] = useState(false);
   const [messageCount, setMessageCount] = useState(0);
   const pathname = usePathname();
+  const router=useRouter()
 
   const userData=useSelector((state:any)=> state.user)
 
@@ -73,6 +75,22 @@ export default function CountryManagerSidebar() {
   useEffect(() => {
     fetchMessageCount();
   }, []);
+
+
+
+    const handleLogout=async()=>{
+    try {
+      axios.defaults.withCredentials=true;
+      const logout=await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/logout`)
+
+      if(logout.status){
+        router.push("/auth/login")
+        toast.success("Logout success")
+      }
+    } catch (error) {
+      toast.error("Logout Fail")
+    }
+  }
 
   return (
     <>
@@ -147,8 +165,8 @@ export default function CountryManagerSidebar() {
 
         {/* Footer */}
         {/* @ts-ignore */}
-        <div className="border-t border-gray-100 dark:border-gray-800 px-4 py-4 flex-shrink-0">
-          <button className="flex items-center gap-3 text-gray-600 dark:text-gray-300 hover:text-red-600 transition-colors text-sm font-medium w-full">
+        <div className="border-t border-gray-100 dark:border-gray-800 px-4 py-4 ">
+          <button onClick={handleLogout} className="flex cursor-pointer items-center gap-3 text-gray-600 dark:text-gray-300 hover:text-red-600 transition-colors text-sm font-medium w-full">
             <LogOut size={18} />
             Logout
           </button>

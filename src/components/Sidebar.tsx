@@ -26,9 +26,10 @@ import {
   School,
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 // ✅ Admin-specific menu configuration
 const adminMenu = [
@@ -49,6 +50,7 @@ export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
   const [messageCount, setMessageCount] = useState(0);
   const pathname = usePathname();
+  const router=useRouter()
 
   // ✅ Fixed role (Admin only)
   const currentRole = "admin";
@@ -70,6 +72,20 @@ export default function Sidebar() {
     fetchMessageCount();
   }, []);
 
+
+  const handleLogout=async()=>{
+    try {
+      axios.defaults.withCredentials=true;
+      const logout=await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/logout`)
+
+      if(logout.status){
+        router.push("/auth/login")
+        toast.success("Logout success")
+      }
+    } catch (error) {
+      toast.error("Logout Fail")
+    }
+  }
   return (
     <>
       {/* Mobile Top Bar */}
@@ -141,8 +157,8 @@ export default function Sidebar() {
         </nav>
 
         {/* Footer */}
-        <div className="border-t border-gray-100 dark:border-gray-800 px-4 py-4 flex-shrink-0">
-          <button className="flex items-center gap-3 text-gray-600 dark:text-gray-300 hover:text-red-600 transition-colors text-sm font-medium w-full">
+        <div className="border-t border-gray-100 dark:border-gray-800 px-4 py-4 ">
+          <button onClick={handleLogout} className="flex items-center cursor-pointer gap-3 text-gray-600 dark:text-gray-300 hover:text-red-600 transition-colors text-sm font-medium w-full">
             <LogOut size={18} />
             Logout
           </button>
