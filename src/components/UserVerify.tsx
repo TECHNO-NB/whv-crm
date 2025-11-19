@@ -32,7 +32,7 @@ export default function VerifyUser() {
               countryName: res.data.data.country.countryName,
             };
             dispatch(addUser(userData));
-            toast.success(`Welcome back ${res.data.fullName}`);
+            toast.success(`Welcome back ${res.data.data.fullName}`);
           }
         } catch (error) {
           console.log(error);
