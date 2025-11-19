@@ -3,6 +3,7 @@
 import { addUser, userState } from "@/redux/userSlice";
 import axios from "axios";
 import { Loader } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,6 +12,7 @@ export default function VerifyUser() {
   const dispatch = useDispatch();
   const userData = useSelector((state: any) => state.user);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const router=useRouter();
   useEffect(() => {
     setIsLoading(true);
     axios.defaults.withCredentials = true;
@@ -31,6 +33,16 @@ export default function VerifyUser() {
               role: res.data.data.role,
               countryName: res.data.data.country.countryName,
             };
+
+            if (res.data.data.role === "admin") {
+              router.push("/admin/dashboard");
+            } else if (res.data.data.role === "country_manager") {
+              router.push("/manager/dashboard");
+            } else if (res.data.data.role === "it") {
+              router.push("/it/dashboard");
+            } else if (res.data.data.role === "finance") {
+              router.push("/finance/dashboard");
+            }
             dispatch(addUser(userData));
             toast.success(`Welcome back ${res.data.data.fullName}`);
           }

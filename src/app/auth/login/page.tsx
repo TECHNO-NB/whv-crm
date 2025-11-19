@@ -73,6 +73,12 @@ export default function LoginPage() {
         dispatch(addUser(userData));
         if(res.data.data.role==="admin"){
           router.push("/admin/dashboard")
+        }else if(res.data.data.role==="country_manager"){
+          router.push("/manager/dashboard")
+        }else if(res.data.data.role==="it"){
+          router.push("/it/dashboard")
+        }else if(res.data.data.role==="finance"){
+           router.push("/finance/dashboard")
         }
         toast.success("Login successful!", { id: loginToast });
 
