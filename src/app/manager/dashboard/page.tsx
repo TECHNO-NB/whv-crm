@@ -39,7 +39,7 @@ const Page = () => {
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/${userData.countryId}`, {
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/countrymanager/${userData.countryId}`, {
           withCredentials: true, // include cookies if needed
         });
 
