@@ -7,6 +7,7 @@ export interface userState {
    email: string;
   countryName:string;
   role: string;
+  code: string;
 }
 
 const initialState: userState = {
@@ -16,6 +17,7 @@ const initialState: userState = {
   role: "",
   countryName:"",
   countryId:"",
+  code:"",
 };
 const userSlice = createSlice({
   name: "user",
@@ -28,6 +30,7 @@ const userSlice = createSlice({
       state.role = action.payload.role;
       state.countryName = action.payload.countryName;
        state.countryId = action.payload.countryId;
+       state.code = action.payload.code;
     },
   },
 });

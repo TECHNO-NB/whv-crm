@@ -32,6 +32,7 @@ export default function VerifyUser() {
               email: res.data.data.email,
               role: res.data.data.role,
               countryName: res.data.data.country.countryName,
+               code: res.data.data.country.code,
             };
 
             // if (res.data.data.role === "admin") {

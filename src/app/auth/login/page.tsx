@@ -69,6 +69,7 @@ export default function LoginPage() {
           email: res.data.data.email,
           role: res.data.data.role,
           countryName: res.data.data.country.countryName,
+          code: res.data.data.country.code,
         };
         dispatch(addUser(userData));
         if(res.data.data.role==="admin"){

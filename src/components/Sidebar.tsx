@@ -21,15 +21,20 @@ import {
   Pickaxe,
   DollarSign,
   ChartColumnDecreasing,
+  BanknoteArrowDown,
   MessageCircle,
   Bell,
   School,
+  TicketsPlane ,
+  Scale 
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import axios from "axios";
 import toast from "react-hot-toast";
+import Image from "next/image";
+import { useSelector } from "react-redux";
 
 // ✅ Admin-specific menu configuration
 const adminMenu = [
@@ -41,17 +46,34 @@ const adminMenu = [
   { name: "Message", icon: MessageCircle, href: "/admin/message", count: true },
   { name: "Notification", icon: Bell, href: "/admin/notification" },
   { name: "School", icon: School, href: "/admin/school" },
-
-  // 📅 Event & Meeting Management
   { name: "Events & Meetings", icon: CalendarDays, href: "/admin/events" },
+  { name: "Projects Review", icon: Pickaxe, href: "/admin/project-approved" },
+  {
+    name: "Expense Review",
+    icon: BanknoteArrowDown,
+    href: "/admin/expense-review",
+  },
+   {
+    name: "Tickets",
+    icon: TicketsPlane,
+    href: "/admin/tickets",
+  },
+   {
+    name: "Legal",
+    icon: Scale ,
+    href: "/admin/legal",
+  },
 ];
 
 export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
   const [messageCount, setMessageCount] = useState(0);
   const pathname = usePathname();
-  const router=useRouter()
+  const router = useRouter();
 
+  const {code}=useSelector((state:any)=>state.user)
+
+  let countryCode=code?.toLowerCase() || "us";
   // ✅ Fixed role (Admin only)
   const currentRole = "admin";
 
@@ -72,20 +94,21 @@ export default function Sidebar() {
     fetchMessageCount();
   }, []);
 
-
-  const handleLogout=async()=>{
+  const handleLogout = async () => {
     try {
-      axios.defaults.withCredentials=true;
-      const logout=await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/logout`)
+      axios.defaults.withCredentials = true;
+      const logout = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/logout`
+      );
 
-      if(logout.status){
-        router.push("/auth/login")
-        toast.success("Logout success")
+      if (logout.status) {
+        router.push("/auth/login");
+        toast.success("Logout success");
       }
     } catch (error) {
-      toast.error("Logout Fail")
+      toast.error("Logout Fail");
     }
-  }
+  };
   return (
     <>
       {/* Mobile Top Bar */}
@@ -109,7 +132,13 @@ export default function Sidebar() {
         {/* Header */}
         <div className="px-4 py-5 border-b border-gray-100 dark:border-gray-800 flex items-center gap-2">
           <div className="w-10 h-10 bg-blue-600 text-white flex items-center justify-center rounded-xl font-bold text-lg">
-            A
+            <Image
+              src={`https://flagcdn.com/w160/${"np"}.png`}
+              height={23}
+              width={23}
+              alt="Country Flag"
+              className=" object-fit"
+            />
           </div>
           <div className="flex flex-col">
             <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
@@ -158,7 +187,10 @@ export default function Sidebar() {
 
         {/* Footer */}
         <div className="border-t border-gray-100 dark:border-gray-800 px-4 py-4 ">
-          <button onClick={handleLogout} className="flex items-center cursor-pointer gap-3 text-gray-600 dark:text-gray-300 hover:text-red-600 transition-colors text-sm font-medium w-full">
+          <button
+            onClick={handleLogout}
+            className="flex items-center cursor-pointer gap-3 text-gray-600 dark:text-gray-300 hover:text-red-600 transition-colors text-sm font-medium w-full"
+          >
             <LogOut size={18} />
             Logout
           </button>

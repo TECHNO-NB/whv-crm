@@ -52,9 +52,11 @@ export default function CountryManagerSidebar() {
   const [isOpen, setIsOpen] = useState(false);
   const [messageCount, setMessageCount] = useState(0);
   const pathname = usePathname();
-  const router=useRouter()
+  const router = useRouter();
 
-  const userData=useSelector((state:any)=> state.user)
+  const userData = useSelector((state: any) => state.user);
+
+  let countryCode = userData?.code?.toLowerCase() || "us";
 
   // ✅ Fixed role (Admin only)
   const currentRole = "Country Manager";
@@ -76,21 +78,21 @@ export default function CountryManagerSidebar() {
     fetchMessageCount();
   }, []);
 
-
-
-    const handleLogout=async()=>{
+  const handleLogout = async () => {
     try {
-      axios.defaults.withCredentials=true;
-      const logout=await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/logout`)
+      axios.defaults.withCredentials = true;
+      const logout = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/logout`
+      );
 
-      if(logout.status){
-        router.push("/auth/login")
-        toast.success("Logout success")
+      if (logout.status) {
+        router.push("/auth/login");
+        toast.success("Logout success");
       }
     } catch (error) {
-      toast.error("Logout Fail")
+      toast.error("Logout Fail");
     }
-  }
+  };
 
   return (
     <>
@@ -115,7 +117,13 @@ export default function CountryManagerSidebar() {
         {/* Header */}
         <div className="px-4 py-5 border-b border-gray-100 dark:border-gray-800 flex items-center gap-2">
           <div className="w-10 h-10 bg-blue-600 text-white flex items-center justify-center rounded-xl font-bold text-lg">
-            M
+            <Image
+              src={`https://flagcdn.com/w160/${countryCode}.png`}
+              height={23}
+              width={23}
+              alt="Country Flag"
+              className=" object-fit"
+            />
           </div>
           <div className="flex flex-col">
             <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
@@ -126,7 +134,6 @@ export default function CountryManagerSidebar() {
             </p>
             <Badge>{userData.countryName}</Badge>
           </div>
-         
         </div>
 
         {/* Scrollable Nav */}
@@ -138,11 +145,9 @@ export default function CountryManagerSidebar() {
               <Link
                 key={item.name}
                 href={item.href}
-                
                 className={cn(
                   "flex w-full items-center relative gap-3 rounded-xl px-4 py-2.5 text-sm font-medium transition-all duration-150",
                   active
-                  
                     ? "bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-md"
                     : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
                 )}
@@ -166,7 +171,10 @@ export default function CountryManagerSidebar() {
         {/* Footer */}
         {/* @ts-ignore */}
         <div className="border-t border-gray-100 dark:border-gray-800 px-4 py-4 ">
-          <button onClick={handleLogout} className="flex cursor-pointer items-center gap-3 text-gray-600 dark:text-gray-300 hover:text-red-600 transition-colors text-sm font-medium w-full">
+          <button
+            onClick={handleLogout}
+            className="flex cursor-pointer items-center gap-3 text-gray-600 dark:text-gray-300 hover:text-red-600 transition-colors text-sm font-medium w-full"
+          >
             <LogOut size={18} />
             Logout
           </button>
