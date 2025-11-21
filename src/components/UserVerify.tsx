@@ -34,15 +34,15 @@ export default function VerifyUser() {
               countryName: res.data.data.country.countryName,
             };
 
-            if (res.data.data.role === "admin") {
-              router.push("/admin/dashboard");
-            } else if (res.data.data.role === "country_manager") {
-              router.push("/manager/dashboard");
-            } else if (res.data.data.role === "it") {
-              router.push("/it/dashboard");
-            } else if (res.data.data.role === "finance") {
-              router.push("/finance/dashboard");
-            }
+            // if (res.data.data.role === "admin") {
+            //   router.push("/admin/dashboard");
+            // } else if (res.data.data.role === "country_manager") {
+            //   router.push("/manager/dashboard");
+            // } else if (res.data.data.role === "it") {
+            //   router.push("/it/dashboard");
+            // } else if (res.data.data.role === "finance") {
+            //   router.push("/finance/dashboard");
+            // }
             dispatch(addUser(userData));
             toast.success(`Welcome back ${res.data.data.fullName}`);
           }

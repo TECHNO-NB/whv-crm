@@ -72,7 +72,7 @@ export default function FinancialReportsPage() {
     axios.defaults.withCredentials = true;
     try {
       const res = await axios.get(
-        "http://localhost:4000/api/v1/financial/dashboard"
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/financial/dashboard`
       );
       setDashboardData(res.data.data);
     } catch (err) {
