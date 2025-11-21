@@ -32,6 +32,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { Badge } from "./ui/badge";
 import toast from "react-hot-toast";
+import Image from "next/image";
 
 // ✅ Admin-specific menu configuration
 const adminMenu = [
