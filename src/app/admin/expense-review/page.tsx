@@ -40,6 +40,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 // --- Interfaces ---
 type ExpenseStatus = "pending" | "approved" | "rejected";
@@ -50,7 +51,7 @@ interface Expense {
     category: string;
     status: ExpenseStatus;
     // 🔑 UPDATED: Now an array of strings
-    invoiceUrls?: string[]; 
+    invoiceUrl?: string[]; 
     date?: string;
     notes?: string;
     submittedBy?: { name: string };
@@ -67,6 +68,7 @@ interface ExpenseCardProps {
 // --- 1. ExpenseReviewCard Component (Invoice Logic Modified) ---
 
 export function ExpenseReviewCard({ expense, onExpenseUpdate }: ExpenseCardProps) {
+    const userData=useSelector((state:any)=> state.user)
     const [editOpen, setEditOpen] = useState(false);
     const [invoiceOpen, setInvoiceOpen] = useState(false);
     const [formData, setFormData] = useState({
@@ -75,7 +77,7 @@ export function ExpenseReviewCard({ expense, onExpenseUpdate }: ExpenseCardProps
     });
 
     // Determine if there are any invoices
-    const hasInvoices = expense.invoiceUrls && expense.invoiceUrls.length > 0;
+    const hasInvoices = expense.invoiceUrl && expense.invoiceUrl.length > 0;
 
     const handleStatusChange = (value: string) => {
         setFormData({ ...formData, status: value as ExpenseStatus });
@@ -93,10 +95,10 @@ export function ExpenseReviewCard({ expense, onExpenseUpdate }: ExpenseCardProps
                 return;
             }
             
-            const updateData = { status: formData.status, notes: formData.notes };
+            const updateData = { status: formData.status, notes: formData.notes,approvedBy:userData.id };
             
             // ⚠️ REAL API CALL - Use your actual endpoint here
-            const res = await axios.put(`/api/v1/expenses/${expense.id}`, updateData, {
+            const res = await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/expenses/update/${expense.id}`, updateData, {
                  withCredentials: true,
             });
 
@@ -208,9 +210,11 @@ export function ExpenseReviewCard({ expense, onExpenseUpdate }: ExpenseCardProps
                     <div className="flex items-center gap-1"><Tag size={14} className="text-gray-500" />
                         <span className="font-medium">Category:</span><span className="truncate">{expense.category}</span>
                     </div>
-                    <div className="flex items-center gap-1"><NotebookText size={14} className="text-gray-500" />
-                        <span className="font-medium">Project:</span><span className="truncate">{expense.project?.title || "General"}</span>
+                    <div className="w-full flex items-center justify-between ">
+                       <div className="flex gap-1 items-center justify-center"><NotebookText size={14} className="text-gray-500" /><span>Country: {expense.submittedBy?.country.countryName}</span></div> 
+                     <h1 className="font-medium">Submit By: <span className="truncate">{expense.submittedBy?.fullName || "John"}</span></h1>
                     </div>
+                    <h1 className="font-medium">Role: <span className="truncate">{expense.submittedBy?.role || "user"}</span></h1>
                     <div className="flex items-center gap-1"><Calendar size={14} className="text-gray-500" />
                         <span className="font-medium">Date:</span><span className="truncate">{formattedDate}</span>
                     </div>
@@ -225,7 +229,7 @@ export function ExpenseReviewCard({ expense, onExpenseUpdate }: ExpenseCardProps
                             disabled={!hasInvoices}
                         >
                             <FileImage size={18} className="mr-2" />
-                            {hasInvoices ? `View ${expense.invoiceUrls.length} Invoice${expense.invoiceUrls.length > 1 ? 's' : ''}` : "No Invoice Attached"}
+                            {hasInvoices ? `View ${expense.invoiceUrl.length} Invoice${expense.invoiceUrl.length > 1 ? 's' : ''}` : "No Invoice Attached"}
                         </Button>
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-[600px]">
@@ -233,9 +237,9 @@ export function ExpenseReviewCard({ expense, onExpenseUpdate }: ExpenseCardProps
                         <div className="py-4">
                             {hasInvoices ? (
                                 <div className="grid grid-cols-1 gap-3 max-h-96 overflow-y-auto p-2">
-                                    <p className="text-gray-600 mb-2">Attached Documents ({expense.invoiceUrls.length}):</p>
+                                    <p className="text-gray-600 mb-2">Attached Documents ({expense.invoiceUrl.length}):</p>
                                     {/* 🔑 Iterate over the array to show multiple links */}
-                                    {expense.invoiceUrls.map((url, index) => (
+                                    {expense.invoiceUrl.map((url, index) => (
                                         <a 
                                             key={index}
                                             href={url} 
@@ -286,6 +290,7 @@ export default function ExpenseReviewDemo() {
                 // Assuming res.data.data is the array of expenses
                 // You must ensure your API now returns 'invoiceUrls' as an array of strings.
                 setExpenses(res.data.data || []);
+                
             } catch (err: any) {
                 console.error("Error fetching expenses:", err);
                 setError(err.response?.data?.message || "Failed to load expenses from API.");

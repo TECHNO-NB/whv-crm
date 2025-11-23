@@ -32,6 +32,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import toast from "react-hot-toast";
+import axios from "axios";
 
 interface ProjectCardProps {
   project: {
@@ -72,14 +73,14 @@ export default function ProjectReviewCard({ project }: ProjectCardProps) {
         setEditOpen(false);
         return;
       }
+      axios.defaults.withCredentials = true;
+      const res = await axios.put(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/projects/update/${project.id}`,
+        { approved: formData.approved }
+      );
 
-      const res = await fetch(`/api/v1/projects/${project.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ approved: formData.approved }), // Only send the updated field
-      });
-
-      if (!res.ok) throw new Error("Failed to update project approval status");
+      if (!res.status)
+        throw new Error("Failed to update project approval status");
 
       toast.success("Project approval status updated successfully!");
       setEditOpen(false);
@@ -104,7 +105,9 @@ export default function ProjectReviewCard({ project }: ProjectCardProps) {
   };
 
   // Helper for budget display
-  const displayBudget = project.budget ? `$${project.budget.toLocaleString()}` : "N/A";
+  const displayBudget = project.budget
+    ? `$${project.budget.toLocaleString()}`
+    : "N/A";
 
   return (
     <Card className="w-full mt-6 max-w-sm rounded-2xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200">
@@ -175,7 +178,10 @@ export default function ProjectReviewCard({ project }: ProjectCardProps) {
                 </div>
 
                 <DialogFooter>
-                  <Button variant="secondary" onClick={() => setEditOpen(false)}>
+                  <Button
+                    variant="secondary"
+                    onClick={() => setEditOpen(false)}
+                  >
                     Cancel
                   </Button>
                   <Button
@@ -214,9 +220,7 @@ export default function ProjectReviewCard({ project }: ProjectCardProps) {
           <div>
             <p className="font-medium">Budget</p>
             {/* 🐛 FIX 4: Use project.budget directly, or the display helper */}
-            <p className="text-gray-900 font-semibold">
-              {displayBudget}
-            </p>
+            <p className="text-gray-900 font-semibold">{displayBudget}</p>
           </div>
           <div>
             <p className="font-medium">Team Size</p>
@@ -287,7 +291,11 @@ export default function ProjectReviewCard({ project }: ProjectCardProps) {
                       <span className="text-sm font-medium truncate">
                         {doc.name}
                       </span>
-                      <a href={doc.url} target="_blank" rel="noopener noreferrer">
+                      <a
+                        href={doc.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
                         <Button
                           variant="ghost"
                           size="icon"
@@ -307,7 +315,10 @@ export default function ProjectReviewCard({ project }: ProjectCardProps) {
               )}
             </div>
             <DialogFooter>
-              <Button variant="secondary" onClick={() => setDocumentsOpen(false)}>
+              <Button
+                variant="secondary"
+                onClick={() => setDocumentsOpen(false)}
+              >
                 Close
               </Button>
             </DialogFooter>

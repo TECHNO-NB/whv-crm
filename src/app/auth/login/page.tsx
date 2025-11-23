@@ -77,9 +77,13 @@ export default function LoginPage() {
         }else if(res.data.data.role==="country_manager"){
           router.push("/manager/dashboard")
         }else if(res.data.data.role==="it"){
-          router.push("/it/dashboard")
+          router.push("/IT/dashboard")
         }else if(res.data.data.role==="finance"){
            router.push("/finance/dashboard")
+        } else if(res.data.data.role==="hr"){
+           router.push("/HR/dashboard")
+        }else if(res.data.data.role==="legal"){
+           router.push("/legal/dashboard")
         }
         toast.success("Login successful!", { id: loginToast });
 

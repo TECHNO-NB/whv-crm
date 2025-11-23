@@ -36,13 +36,12 @@ const Page = () => {
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/dashboard`, {
-          withCredentials: true, // include cookies if needed
-        });
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/dashboard`,
+          { withCredentials: true }
+        );
 
-        // backend returns data inside res.data.data
         setData(res.data.data);
-        console.log("+++++++++ Dashboard",res.data.data)
       } catch (error) {
         console.error("❌ Error fetching dashboard:", error);
       } finally {
@@ -54,7 +53,7 @@ const Page = () => {
 
   if (loading)
     return (
-      <div className="flex items-center justify-center min-h-screen text-orange-600 font-semibold">
+      <div className="flex items-center justify-center min-h-screen text-[#EA580C] font-semibold">
         Loading Dashboard...
       </div>
     );
@@ -71,36 +70,36 @@ const Page = () => {
       title: "Total Projects",
       value: data.totalProjects,
       icon: <ClipboardList />,
-      color: "bg-orange-500",
+      color: "bg-[#EA580C]",
     },
     {
       title: "Active Volunteers",
       value: data.activeVolunteers,
       icon: <Users />,
-      color: "bg-amber-500",
+      color: "bg-[#D97706]",
     },
     {
       title: "Countries",
       value: data.totalCountries,
       icon: <Globe />,
-      color: "bg-yellow-500",
+      color: "bg-[#F59E0B]",
     },
     {
       title: "Total Donations",
       value: `$${data.totalDonation.toLocaleString()}`,
       icon: <DollarSign />,
-      color: "bg-green-500",
+      color: "bg-[#16A34A]",
     },
   ];
 
   return (
-    <div className="min-h-screen bg-orange-50 p-6 ml-28">
+    <div className="min-h-screen bg-[#FFDDC7] text-white
+  p-6 ml-28">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-orange-700">
-           World Hindu Vision - NGO Dashboard
+        <h1 className="text-2xl font-bold text-[#C2410C]">
+          World Hindu Vision - NGO Dashboard
         </h1>
-       
       </div>
 
       {/* Top Stats Grid */}
@@ -112,17 +111,19 @@ const Page = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.1 }}
           >
-            <Card className="shadow-md border-none">
+            <Card className="shadow-md border border-orange-100 bg-white rounded-xl">
               <CardHeader className="flex flex-row justify-between items-center">
-                <CardTitle className="text-lg text-slate-700">
+                <CardTitle className="text-lg text-[#7C2D12]">
                   {item.title}
                 </CardTitle>
-                <div className={`p-3 rounded-full text-white ${item.color}`}>
+                <div
+                  className={`p-3 rounded-full text-white shadow-sm ${item.color}`}
+                >
                   {item.icon}
                 </div>
               </CardHeader>
               <CardContent>
-                <p className="text-3xl font-semibold text-slate-900">
+                <p className="text-3xl font-semibold text-[#4B2E1A]">
                   {item.value}
                 </p>
               </CardContent>
@@ -133,45 +134,47 @@ const Page = () => {
 
       {/* Middle Charts Section */}
       <div className="grid gap-6 mt-8 md:grid-cols-2">
-        <Card className="border-none shadow-md">
+        {/* Top Donating Countries */}
+        <Card className="border border-orange-100 bg-white shadow-md rounded-xl">
           <CardHeader>
-            <CardTitle className="text-orange-700 flex items-center gap-2">
+            <CardTitle className="text-[#C2410C] flex items-center gap-2">
               <BarChart3 className="w-5 h-5" /> Top Donating Countries
             </CardTitle>
           </CardHeader>
           <CardContent>
             {data.topCountryDonations.length > 0 ? (
-              <ul className="space-y-2 text-slate-700">
+              <ul className="space-y-2 text-[#4B2E1A] text-sm">
                 {data.topCountryDonations.map((country, index) => (
                   <li
                     key={index}
-                    className="flex justify-between border-b pb-1 text-sm"
+                    className="flex justify-between border-b border-orange-100 pb-1"
                   >
                     <span>
                       {country.country} — {country.project}
                     </span>
-                    <span className="font-semibold">
+                    <span className="font-semibold text-[#C2410C]">
                       ${country.totalDonation.toLocaleString()}
                     </span>
                   </li>
                 ))}
               </ul>
             ) : (
-              <p className="text-slate-500 text-sm">
+              <p className="text-[#A16207] text-sm">
                 No donation data available.
               </p>
             )}
           </CardContent>
         </Card>
 
-        <Card className="border-none shadow-md">
+        {/* Communication Updates */}
+        <Card className="border border-orange-100 bg-white shadow-md rounded-xl">
           <CardHeader>
-            <CardTitle className="text-orange-700 flex items-center gap-2">
+            <CardTitle className="text-[#C2410C] flex items-center gap-2">
               <MessageSquare className="w-5 h-5" /> Communication Updates
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <ul className="text-slate-600 text-sm space-y-2">
+            <ul className="text-[#4B2E1A] text-sm space-y-2">
               <li>• Total Messages: {data.totalMessages}</li>
               <li>• Budget review scheduled tomorrow</li>
               <li>• Volunteer meeting planned next week</li>
@@ -181,7 +184,7 @@ const Page = () => {
       </div>
 
       {/* Chart Overview Component */}
-      <DashboardOverviewPage data={data}/>
+      <DashboardOverviewPage data={data} />
     </div>
   );
 };

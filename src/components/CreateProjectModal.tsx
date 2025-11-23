@@ -133,7 +133,7 @@ export default function CreateProjectModal() {
 
     try {
       const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/project`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/projects`,
         formData,
         { withCredentials: true }
       );
@@ -355,9 +355,7 @@ export default function CreateProjectModal() {
 
           {/* Submit */}
           <div className="flex justify-end gap-3">
-            <Button type="button" variant="outline">
-              Cancel
-            </Button>
+           
             <Button className="bg-orange-500 hover:bg-orange-600 text-white">
               + Create Project
             </Button>
