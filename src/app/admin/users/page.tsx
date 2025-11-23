@@ -320,7 +320,7 @@ const UserManagementPage: React.FC = () => {
 
   const handleRoleSave = async (userId: string, newRole: UserRole) => {
     try {
-      await axios.put(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/${userId}/role`, { role: newRole });
+      await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/${userId}/role`, { role: newRole });
       toast.success("Role updated successfully");
       fetchUsers();
     } catch (error: any) {

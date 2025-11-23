@@ -32,8 +32,8 @@ interface DashboardData {
 const Page = () => {
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
+  const [event,setEvent] = useState([]);
+  
     const fetchDashboardData = async () => {
       try {
         const res = await axios.get(
@@ -48,7 +48,27 @@ const Page = () => {
         setLoading(false);
       }
     };
+
+
+    const fetchEvents=async()=>{
+    try {
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/events`,
+          { withCredentials: true }
+        );
+
+        setEvent(res.data.data);
+        console.log(res.data.data)
+      } catch (error) {
+        console.error("❌ Error fetching dashboard:", error);
+      } finally {
+       
+      }
+    }
+  useEffect(() => {
+
     fetchDashboardData();
+    fetchEvents()
   }, []);
 
   if (loading)
@@ -184,7 +204,7 @@ const Page = () => {
       </div>
 
       {/* Chart Overview Component */}
-      <DashboardOverviewPage data={data} />
+      <DashboardOverviewPage data={data} events={event} />
     </div>
   );
 };
