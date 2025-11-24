@@ -289,10 +289,10 @@ export default function ProjectReviewCard({ project }: ProjectCardProps) {
                       className="flex justify-between items-center p-3 border rounded-lg hover:bg-gray-50 transition-colors"
                     >
                       <span className="text-sm font-medium truncate">
-                        {doc.name}
+                        {doc}
                       </span>
                       <a
-                        href={doc.url}
+                        href={doc}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
@@ -300,7 +300,7 @@ export default function ProjectReviewCard({ project }: ProjectCardProps) {
                           variant="ghost"
                           size="icon"
                           className="text-gray-500 hover:text-green-600"
-                          aria-label={`Download ${doc.name}`}
+                          aria-label={`Download ${doc}`}
                         >
                           <Download size={18} />
                         </Button>

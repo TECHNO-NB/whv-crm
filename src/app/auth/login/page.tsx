@@ -39,7 +39,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
-  const router=useRouter();
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -72,18 +72,20 @@ export default function LoginPage() {
           code: res.data.data.country.code,
         };
         dispatch(addUser(userData));
-        if(res.data.data.role==="admin"){
-          router.push("/admin/dashboard")
-        }else if(res.data.data.role==="country_manager"){
-          router.push("/manager/dashboard")
-        }else if(res.data.data.role==="it"){
-          router.push("/IT/dashboard")
-        }else if(res.data.data.role==="finance"){
-           router.push("/finance/dashboard")
-        } else if(res.data.data.role==="hr"){
-           router.push("/HR/dashboard")
-        }else if(res.data.data.role==="legal"){
-           router.push("/legal/dashboard")
+        if (res.data.data.role === "admin") {
+          router.push("/admin/dashboard");
+        } else if (res.data.data.role === "country_manager") {
+          router.push("/manager/dashboard");
+        } else if (res.data.data.role === "it") {
+          router.push("/IT/dashboard");
+        } else if (res.data.data.role === "finance") {
+          router.push("/finance/dashboard");
+        } else if (res.data.data.role === "hr") {
+          router.push("/HR/dashboard");
+        } else if (res.data.data.role === "legal") {
+          router.push("/legal/dashboard");
+        } else if (res.data.data.role === "volunteer") {
+          router.push("/volunteer/dashboard");
         }
         toast.success("Login successful!", { id: loginToast });
 
@@ -186,12 +188,12 @@ export default function LoginPage() {
                   Remember me
                 </label>
               </div>
-              <a
+              {/* <a
                 href="#"
                 className="text-sm font-medium text-orange-500 hover:text-orange-600 transition-colors"
               >
                 Forgot password?
-              </a>
+              </a> */}
             </div>
 
             <Button

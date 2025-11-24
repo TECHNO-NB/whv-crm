@@ -22,12 +22,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  MoreHorizontal,
-  Trash2,
-  Users,
-  UserCheck,
-} from "lucide-react";
+import { MoreHorizontal, Trash2, Users, UserCheck } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -49,17 +44,13 @@ import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 
 type UserRole =
-  | "chairman"
-  | "country_manager"
   | "finance"
   | "legal"
   | "hr"
-  | "admin"
   | "it"
   | "councilor"
   | "volunteer"
   | "viewer";
-
 
 interface Country {
   id: string;
@@ -77,20 +68,15 @@ interface User {
 }
 
 const ALL_ROLES: UserRole[] = [
-  "chairman",
-  "country_manager",
   "finance",
   "legal",
   "hr",
-  "admin",
+
   "it",
   "councilor",
   "volunteer",
   "viewer",
 ];
-
-
-
 
 // Avatar + Name Cell
 const UserCell: React.FC<{ user: User }> = ({ user }) => (
@@ -112,19 +98,13 @@ const RoleBadge: React.FC<{ role: UserRole }> = ({ role }) => {
   const getVariant = (r: UserRole) => {
     switch (r) {
       // @ts-ignore
-      case "Country Manager":
-        return "default";
-         // @ts-ignore
       case "IT Head":
-
         return "secondary";
-         // @ts-ignore
+      // @ts-ignore
       case "Lawyer":
         return "outline";
-         // @ts-ignore
-      case "Admin":
-        return "destructive";
-         // @ts-ignore
+      // @ts-ignore
+
       case "Volunteer":
         return "default";
       default:
@@ -268,7 +248,10 @@ const UserTable: React.FC<{
           ))
         ) : (
           <TableRow>
-            <TableCell colSpan={3} className="h-24 text-center text-muted-foreground">
+            <TableCell
+              colSpan={3}
+              className="h-24 text-center text-muted-foreground"
+            >
               No users found.
             </TableCell>
           </TableRow>
@@ -287,14 +270,16 @@ const UserManagementPage: React.FC = () => {
   const [roleDialogOpen, setRoleDialogOpen] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState<string>("All");
   const [selectedTab, setSelectedTab] = useState<UserRole | "All">("All");
-  const userData=useSelector((state:any)=> state.user)
+  const userData = useSelector((state: any) => state.user);
   // Fetch countries
   useEffect(() => {
-    axios.defaults.withCredentials=true;
+    axios.defaults.withCredentials = true;
     const fetchCountries = async () => {
       try {
         setLoadingCountries(true);
-        const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/country`);
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/country`
+        );
         setCountries(res.data.data);
       } catch (err) {
         console.error("Error fetching countries:", err);
@@ -308,8 +293,10 @@ const UserManagementPage: React.FC = () => {
   // Fetch users
   const fetchUsers = async () => {
     try {
-      axios.defaults.withCredentials=true;
-      const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/countrymanageruser/${userData.countryId}`);
+      axios.defaults.withCredentials = true;
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/countrymanageruser/${userData.countryId}`
+      );
       setUsers(res.data.data);
     } catch (error: any) {
       toast.error(error?.response?.data?.message || "Failed to fetch users");
@@ -322,7 +309,10 @@ const UserManagementPage: React.FC = () => {
 
   const handleRoleSave = async (userId: string, newRole: UserRole) => {
     try {
-      await axios.put(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/${userId}/role`, { role: newRole });
+      await axios.put(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/${userId}/role`,
+        { role: newRole }
+      );
       toast.success("Role updated successfully");
       fetchUsers();
     } catch (error: any) {
@@ -331,9 +321,12 @@ const UserManagementPage: React.FC = () => {
   };
 
   const handleDeleteUser = async (user: User) => {
-    if (!window.confirm(`Are you sure you want to delete ${user.fullName}?`)) return;
+    if (!window.confirm(`Are you sure you want to delete ${user.fullName}?`))
+      return;
     try {
-      await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/${user.id}`);
+      await axios.delete(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/${user.id}`
+      );
       toast.success("User deleted successfully");
       fetchUsers();
     } catch (error: any) {
@@ -348,7 +341,8 @@ const UserManagementPage: React.FC = () => {
 
   // Filter users by country and role
   const filteredUsers = users.filter((user) => {
-    const countryMatch = selectedCountry === "All" || user.countryId === selectedCountry;
+    const countryMatch =
+      selectedCountry === "All" || user.countryId === selectedCountry;
     const roleMatch = selectedTab === "All" || user.role === selectedTab;
     return countryMatch && roleMatch;
   });
@@ -359,7 +353,6 @@ const UserManagementPage: React.FC = () => {
         <h1 className="text-3xl font-extrabold flex items-center">
           <Users className="h-8 w-8 mr-3 text-primary" /> User Management
         </h1>
-       
       </header>
 
       {/* Filters */}
@@ -375,23 +368,34 @@ const UserManagementPage: React.FC = () => {
           <SelectContent>
             <SelectItem value="All">All</SelectItem>
             {countries.map((c) => (
-              <SelectItem key={c.id} value={c.id}>{c.countryName}</SelectItem>
+              <SelectItem key={c.id} value={c.id}>
+                {c.countryName}
+              </SelectItem>
             ))}
           </SelectContent>
         </Select>
       </div>
 
       {/* Tabs for roles */}
-      <Tabs value={selectedTab} onValueChange={(val) => setSelectedTab(val as any)}>
+      <Tabs
+        value={selectedTab}
+        onValueChange={(val) => setSelectedTab(val as any)}
+      >
         <TabsList>
           <TabsTrigger value="All">All</TabsTrigger>
           {ALL_ROLES.map((role) => (
-            <TabsTrigger key={role} value={role}>{role.toUpperCase()}</TabsTrigger>
+            <TabsTrigger key={role} value={role}>
+              {role.toUpperCase()}
+            </TabsTrigger>
           ))}
         </TabsList>
       </Tabs>
 
-      <UserTable users={filteredUsers} onRoleChange={handleRoleChangeClick} onDelete={handleDeleteUser} />
+      <UserTable
+        users={filteredUsers}
+        onRoleChange={handleRoleChangeClick}
+        onDelete={handleDeleteUser}
+      />
 
       <RoleChangeDialog
         user={selectedUser}

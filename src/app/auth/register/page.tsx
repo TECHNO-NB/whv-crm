@@ -52,6 +52,7 @@ export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [countries, setCountries] = useState<Country[]>([]);
   const [loadingCountries, setLoadingCountries] = useState(false);
+  const [isLoading,setIsLoading]=useState(false);
   const [formData, setFormData] = useState<UserRegistrationData>({
     firstName: "",
     lastName: "",
@@ -121,7 +122,7 @@ export default function RegisterPage() {
   };
 
   const isStep1Valid = () =>
-    formData.firstName && formData.lastName && formData.email;
+    formData.firstName && formData.lastName && formData.email && formData.avatarFile;
   const isStep2Valid = () =>
     formData.address && formData.country && formData.contactPhone;
   const isStep3Valid = () =>
@@ -144,7 +145,7 @@ export default function RegisterPage() {
       toast.error("Please ensure passwords match and are provided.");
       return;
     }
-
+     const RegisterToast = toast.loading("Register...");
     const form = new FormData();
     form.append("fullName", `${formData.firstName} ${formData.lastName}`);
     form.append("email", formData.email);
@@ -167,9 +168,9 @@ export default function RegisterPage() {
 
       if (data.success) {
         router.push("/auth/login");
-        toast.success("Registration complete!.");
+        toast.success("Register successfull", { id: RegisterToast });
       } else {
-        toast.error(`Registration failed: ${data.message}`);
+       toast.error(res.data.message || "Register failed", { id: RegisterToast });
       }
     } catch (error) {
       console.error("Error during registration:", error);

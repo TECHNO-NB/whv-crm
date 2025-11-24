@@ -19,7 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { X, FileIcon } from "lucide-react";
+import { X, FileIcon, Loader2 } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -50,7 +50,7 @@ export default function EditProjectModal({
   const [description, setDescription] = useState(project.description);
   const [startDate, setStartDate] = useState(project.startDate?.slice(0, 10));
   const [endDate, setEndDate] = useState(project.endDate?.slice(0, 10));
-
+  const [loading,setIsLoading]=useState(false)
   const [users, setUsers] = useState([]);
   const [countries, setCountries] = useState([]);
 
@@ -123,6 +123,7 @@ export default function EditProjectModal({
 
   const saveChanges = async () => {
     try {
+      setIsLoading(true)
       const formData = new FormData();
 
       formData.append("title", title);
@@ -151,13 +152,16 @@ export default function EditProjectModal({
       );
 
       if (res.data.success) {
+         setIsLoading(false)
         toast.success("Project updated!");
         onClose(); // use onClose
         refresh && refresh();
       } else {
+         setIsLoading(false)
         toast.error(res.data.message);
       }
     } catch (err) {
+      setIsLoading(false)
       console.error(err);
       toast.error("Failed to update project");
     }
@@ -388,7 +392,7 @@ export default function EditProjectModal({
 
         <DialogFooter>
           <Button className="bg-orange-500 text-white" onClick={saveChanges}>
-            Save Changes
+            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Save Changes"} 
           </Button>
         </DialogFooter>
       </DialogContent>

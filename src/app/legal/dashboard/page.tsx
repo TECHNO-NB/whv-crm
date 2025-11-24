@@ -124,9 +124,9 @@ const Page = () => {
         <h1 className="text-2xl font-bold text-orange-700">
           🌏 World Hindu Vision - NGO Dashboard
         </h1>
-        <Button className="bg-orange-600 hover:bg-orange-700 text-white">
+        {/* <Button className="bg-orange-600 hover:bg-orange-700 text-white">
           + Add Project
-        </Button>
+        </Button> */}
       </div>
 
       {/* Top Stats Grid */}

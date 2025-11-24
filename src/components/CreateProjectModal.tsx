@@ -21,7 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, X, FileIcon } from "lucide-react";
+import { Plus, X, FileIcon, Loader2 } from "lucide-react";
 import Image from "next/image";
 import { toast } from "sonner";
 
@@ -31,7 +31,7 @@ export default function CreateProjectModal() {
   const [countryId, setCountryId] = useState("");
   const [managerId, setManagerId] = useState("");
   const [workers, setWorkers] = useState([]);
-
+  const [loading, setIsLoading] = useState(false);
   const [budget, setBudget] = useState("");
   const [description, setDescription] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -108,8 +108,10 @@ export default function CreateProjectModal() {
   // =============================
   const handleCreateProject = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
 
     if (!title || !priority || !countryId || !managerId) {
+      setIsLoading(false);
       toast.error("Please fill all required fields");
       return;
     }
@@ -138,9 +140,15 @@ export default function CreateProjectModal() {
         { withCredentials: true }
       );
 
-      if (res.data.success) toast.success("Project created successfully");
-      else toast.error(res.data.message);
+      if (res.data) {
+        setIsLoading(false);
+        toast.success("Project created successfully");
+      } else {
+        setIsLoading(false);
+        toast.error(res.data.message);
+      }
     } catch {
+      setIsLoading(false);
       toast.error("Failed to create project");
     }
   };
@@ -324,11 +332,19 @@ export default function CreateProjectModal() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="text-sm font-medium">Start Date</label>
-              <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+              <Input
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+              />
             </div>
             <div>
               <label className="text-sm font-medium">End Date</label>
-              <Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+              <Input
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+              />
             </div>
           </div>
 
@@ -355,9 +371,12 @@ export default function CreateProjectModal() {
 
           {/* Submit */}
           <div className="flex justify-end gap-3">
-           
             <Button className="bg-orange-500 hover:bg-orange-600 text-white">
-              + Create Project
+              {loading ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                "+ Create Project"
+              )}
             </Button>
           </div>
         </form>
