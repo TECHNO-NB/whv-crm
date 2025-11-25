@@ -19,6 +19,8 @@ import {
   Menu,
   X,
   LogOut,
+  Earth ,
+  Building2 
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -58,6 +60,16 @@ const adminMenu = [
     name: "Legal",
     icon: Scale,
     href: "/admin/legal",
+  },
+  {
+    name: "Country",
+    icon: Earth,
+    href: "/admin/country",
+  },
+   {
+    name: "Province",
+    icon: Building2,
+    href: "/admin/province",
   },
 ];
 

@@ -13,6 +13,7 @@ import {
   X,
   LogOut,
   School,
+  Building2,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -29,6 +30,11 @@ const adminMenu = [
   { name: "Message", icon: MessageCircle, href: "/HR/message", count: true },
   { name: "School", icon: School, href: "/HR/school" },
   { name: "Events & Meetings", icon: CalendarDays, href: "/HR/events" },
+   {
+    name: "Province",
+    icon: Building2,
+    href: "/HR/province",
+  },
 ];
 
 export default function HRSidebar() {

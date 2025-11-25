@@ -352,7 +352,7 @@ export default function FinancialDashboardPage() {
         </h1>
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-4 w-full xl:w-auto">
           <div className="flex space-x-4">
-            <div className="min-w-[150px]">
+            {/* <div className="min-w-[150px]">
               <YearSelect
                 value={selectedYear}
                 onChange={setSelectedYear}
@@ -366,7 +366,7 @@ export default function FinancialDashboardPage() {
                 label="Filter by Country"
                 includeAll
               />
-            </div>
+            </div> */}
           </div>
           <div className="flex space-x-2 justify-end">
             <Button

@@ -16,6 +16,7 @@ import {
   LogOut,
   Menu,
   X,
+  Building2,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -37,6 +38,11 @@ const adminMenu = [
   { name: "Notification", icon: Bell, href: "/manager/notification" },
   { name: "School", icon: School, href: "/manager/school" },
   { name: "Events & Meetings", icon: CalendarDays, href: "/manager/events" },
+   {
+    name: "Province",
+    icon: Building2,
+    href: "/manager/province",
+  },
 ];
 
 export default function CountryManagerSidebar() {
