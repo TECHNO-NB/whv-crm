@@ -256,7 +256,7 @@ const CRMLandingPage = () => {
       {/* Hero Section */}
       <Navbar />
       <section
-        className="relative pt-32 pb-24 lg:pt-48 lg:pb-36 text-center shadow-xl mb-12"
+        className="relative pt-20 pb-24 lg:pt-34 lg:pb-36 text-center shadow-xl mb-12"
         style={{
           backgroundImage: `url(${banner.src})`,
           backgroundSize: "cover",
