@@ -6,6 +6,7 @@ import banner from "../../public/banner.jpeg";
 import banner1 from "../../public/banner1.jpeg";
 import Image from "next/image";
 import Navbar from "./Navbar";
+import { FeatureSection } from "./FeaturesSection";
 const videoSrc = "./video.mp4";
 
 // --- Icon Definitions (Using inline SVG for single file mandate) ---
@@ -328,6 +329,8 @@ const CRMLandingPage = () => {
           <CardNgo />
         </div>
       </section>
+
+      <FeatureSection/>
       <section className="py-20 md:px-20  w-full min-h-screen bg-white">
         <Image
           src={banner1}
