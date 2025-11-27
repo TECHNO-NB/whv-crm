@@ -49,9 +49,10 @@ export default function VerifyUser() {
               router.push("/HR/dashboard");
             } else if (res.data.data.role === "legal") {
               router.push("/legal/dashboard");
-
-            }else if (res.data.data.role === "volunteer") {
+           }else if (res.data.data.role === "volunteer") {
               router.push("/volunteer/dashboard");
+           }else if (res.data.data.role === "councilor") {
+              router.push("/councilor/dashboard");
              } else {
               router.push("/");
             }

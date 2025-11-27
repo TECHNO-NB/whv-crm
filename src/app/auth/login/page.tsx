@@ -86,6 +86,8 @@ export default function LoginPage() {
           router.push("/legal/dashboard");
         } else if (res.data.data.role === "volunteer") {
           router.push("/volunteer/dashboard");
+        } else if (res.data.data.role === "councilor") {
+          router.push("/councilor/dashboard");
         }
         toast.success("Login successful!", { id: loginToast });
 
