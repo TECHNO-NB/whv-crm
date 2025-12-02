@@ -143,6 +143,7 @@ export default function CreateProjectModal() {
       if (res.data) {
         setIsLoading(false);
         toast.success("Project created successfully");
+        window.location.reload();
       } else {
         setIsLoading(false);
         toast.error(res.data.message);
