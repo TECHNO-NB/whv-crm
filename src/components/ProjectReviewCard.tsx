@@ -38,29 +38,25 @@ interface ProjectCardProps {
   project: {
     id: string;
     title: string;
-    status: string; // Existing project status
-    approved: "pending" | "approved" | "rejected"; // Approval status
+    status: string;
+    approved: "pending" | "approved" | "rejected";
     budget?: number;
     progress?: number;
     workers?: { name: string }[];
     country?: { countryName: string };
     startDate?: string;
     endDate?: string;
-    documents?: { name: string; url: string }[]; // Added documents array
+    documents?: { name: string; url: string }[];
   };
 }
 
 export default function ProjectReviewCard({ project }: ProjectCardProps) {
   const [editOpen, setEditOpen] = useState(false);
   const [documentsOpen, setDocumentsOpen] = useState(false);
-  const [formData, setFormData] = useState({
-    // 🐛 FIX 1: Initialize form data with required fields from project
-    approved: project.approved,
-    // Note: title, budget, etc. are not editable in this review modal,
-    // so we only need 'approved' for state management/PUT request.
-  });
 
-  // 🐛 FIX 2: Removed unused handleChange since only the Select field is mutable
+  const [formData, setFormData] = useState({
+    approved: project.approved,
+  });
 
   const handleApprovedChange = (value: string) => {
     setFormData({ ...formData, approved: value });
@@ -68,7 +64,6 @@ export default function ProjectReviewCard({ project }: ProjectCardProps) {
 
   const handleSave = async () => {
     try {
-      // Basic validation to prevent saving the same status
       if (formData.approved === project.approved) {
         setEditOpen(false);
         return;
@@ -84,11 +79,28 @@ export default function ProjectReviewCard({ project }: ProjectCardProps) {
 
       toast.success("Project approval status updated successfully!");
       setEditOpen(false);
-      // OPTIONAL: A full page reload or prop update is needed here
-      // to reflect the change in the main view.
+      window.location.reload();
     } catch (err) {
       console.error(err);
       toast.error("Error updating project approval status");
+    }
+  };
+
+  // ⭐ NEW: DELETE PROJECT
+  const handleDelete = async () => {
+    try {
+      axios.defaults.withCredentials = true;
+      const res = await axios.delete(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/projects/${project.id}`
+      );
+
+      if (!res.status) throw new Error("Failed to delete");
+
+      toast.success("Project deleted successfully!");
+      window.location.reload();
+    } catch (err) {
+      console.error(err);
+      toast.error("Error deleting project");
     }
   };
 
@@ -100,11 +112,10 @@ export default function ProjectReviewCard({ project }: ProjectCardProps) {
         return "bg-green-600 text-white";
       case "pending":
       default:
-        return "bg-yellow-500 text-gray-800"; // Changed to yellow for pending
+        return "bg-yellow-500 text-gray-800";
     }
   };
 
-  // Helper for budget display
   const displayBudget = project.budget
     ? `$${project.budget.toLocaleString()}`
     : "N/A";
@@ -118,7 +129,7 @@ export default function ProjectReviewCard({ project }: ProjectCardProps) {
             {project.title}
           </h2>
           <div className="flex items-center gap-2">
-            {/* Approval Badge */}
+            {/* Badge */}
             <Badge
               variant="secondary"
               className={`${getBadgeClass(
@@ -128,7 +139,7 @@ export default function ProjectReviewCard({ project }: ProjectCardProps) {
               {project.approved}
             </Badge>
 
-            {/* ✏️ Edit Approval Status Modal Trigger */}
+            {/* Edit Status */}
             <Dialog open={editOpen} onOpenChange={setEditOpen}>
               <DialogTrigger asChild>
                 <Button
@@ -145,19 +156,16 @@ export default function ProjectReviewCard({ project }: ProjectCardProps) {
                 </DialogHeader>
 
                 <div className="grid gap-4 py-4">
-                  {/* Title - Disabled and pre-filled */}
                   <div>
                     <Label htmlFor="title">Project Title</Label>
                     <Input
                       id="title"
-                      name="title"
                       value={project.title}
                       disabled
                       className="bg-gray-50"
                     />
                   </div>
 
-                  {/* Status Select */}
                   <div>
                     <Label>Approval Status</Label>
                     <Select
@@ -168,7 +176,6 @@ export default function ProjectReviewCard({ project }: ProjectCardProps) {
                         <SelectValue placeholder="Select Approval Status" />
                       </SelectTrigger>
                       <SelectContent>
-                        {/* 🐛 FIX 3: Updated SelectItem values/labels to match 'approved' enum */}
                         <SelectItem value="pending">Pending</SelectItem>
                         <SelectItem value="approved">Approved</SelectItem>
                         <SelectItem value="rejected">Rejected</SelectItem>
@@ -178,10 +185,7 @@ export default function ProjectReviewCard({ project }: ProjectCardProps) {
                 </div>
 
                 <DialogFooter>
-                  <Button
-                    variant="secondary"
-                    onClick={() => setEditOpen(false)}
-                  >
+                  <Button variant="secondary" onClick={() => setEditOpen(false)}>
                     Cancel
                   </Button>
                   <Button
@@ -193,10 +197,58 @@ export default function ProjectReviewCard({ project }: ProjectCardProps) {
                 </DialogFooter>
               </DialogContent>
             </Dialog>
+
+            {/* ⭐ DELETE PROJECT BUTTON */}
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="p-1 hover:text-red-600 text-gray-600"
+                >
+                  {/* Trash Icon */}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9 7h6m2 0H7m5-3v3"
+                    />
+                  </svg>
+                </Button>
+              </DialogTrigger>
+
+              <DialogContent className="sm:max-w-[350px]">
+                <DialogHeader>
+                  <DialogTitle>Delete Project</DialogTitle>
+                </DialogHeader>
+
+                <p className="text-sm text-gray-600">
+                  Are you sure you want to delete{" "}
+                  <b>{project.title}</b>? This action cannot be undone.
+                </p>
+
+                <DialogFooter className="mt-4">
+                  <Button variant="secondary">Cancel</Button>
+                  <Button
+                    onClick={handleDelete}
+                    className="bg-red-600 text-white hover:bg-red-700"
+                  >
+                    Delete
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
 
-        {/* Location and Dates */}
+        {/* Location & Dates */}
         <div className="flex items-center gap-3 mt-1 text-sm text-gray-500">
           {project.country?.countryName && (
             <div className="flex items-center gap-1">
@@ -219,7 +271,6 @@ export default function ProjectReviewCard({ project }: ProjectCardProps) {
         <div className="grid grid-cols-2 gap-2 mt-4 text-sm text-gray-700 border-b pb-3">
           <div>
             <p className="font-medium">Budget</p>
-            {/* 🐛 FIX 4: Use project.budget directly, or the display helper */}
             <p className="text-gray-900 font-semibold">{displayBudget}</p>
           </div>
           <div>
@@ -230,10 +281,9 @@ export default function ProjectReviewCard({ project }: ProjectCardProps) {
           </div>
         </div>
 
-        {/* Team & Actions */}
+        {/* Team & Buttons */}
         <div className="flex items-center justify-between mt-3">
           <div className="flex -space-x-2">
-            {/* Worker Avatars */}
             {project.workers?.slice(0, 3).map((w, i) => (
               <div
                 key={i}
@@ -243,7 +293,6 @@ export default function ProjectReviewCard({ project }: ProjectCardProps) {
               </div>
             ))}
 
-            {/* Overflow Count */}
             {project.workers && project.workers.length > 3 && (
               <div className="w-8 h-8 bg-gray-200 text-gray-600 rounded-full flex items-center justify-center text-xs font-semibold border-2 border-white">
                 +{project.workers.length - 3}
@@ -269,7 +318,7 @@ export default function ProjectReviewCard({ project }: ProjectCardProps) {
           </div>
         </div>
 
-        {/* 📄 View Documents Modal Trigger */}
+        {/* Documents Modal */}
         <Dialog open={documentsOpen} onOpenChange={setDocumentsOpen}>
           <DialogTrigger asChild>
             <Button className="mt-4 w-full bg-blue-600 hover:bg-blue-700">
@@ -315,10 +364,7 @@ export default function ProjectReviewCard({ project }: ProjectCardProps) {
               )}
             </div>
             <DialogFooter>
-              <Button
-                variant="secondary"
-                onClick={() => setDocumentsOpen(false)}
-              >
+              <Button variant="secondary" onClick={() => setDocumentsOpen(false)}>
                 Close
               </Button>
             </DialogFooter>
