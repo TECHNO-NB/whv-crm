@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
   Dialog,
@@ -17,6 +17,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { List, Loader2, Paperclip, X } from "lucide-react";
 import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
 
 interface DialogProps {
   isOpen: boolean;
@@ -40,23 +41,7 @@ const EXPENSE_CATEGORIES = [
   "project",
 ];
 
-const COUNTRIES = [
-  "Nepal",
-  "India",
-  "USA",
-  "UK",
-  "Canada",
-  "Australia",
-  "Germany",
-  "France",
-  "Japan",
-  "China",
-  "Brazil",
-  "South Korea",
-  "Italy",
-  "Mexico",
-  "Singapore",
-];
+
 
 interface FileWithPreview {
   file: File;
@@ -67,13 +52,38 @@ interface FileWithPreview {
 const AddExpenseDialog: React.FC<DialogProps> = ({ isOpen, onClose, onSave }) => {
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("");
+  const [countries,setCountries]=useState([]);
   const [country, setCountry] = useState("");
   const [description, setDescription] = useState("");
   const [files, setFiles] = useState<FileWithPreview[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const userData=useSelector((state:any)=> state.user)
 
   const API = process.env.NEXT_PUBLIC_BACKEND_URL || "";
+
+
+    useEffect(() => {
+      const fetchCountries = async () => {
+        try {
+         
+          const res = await fetch(
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/country`
+          );
+          const data = await res.json();
+          if (data.success) {
+            setCountries(data.data); // Expect data.data = [{ countryId, countryName }]
+          } else {
+            console.error("Failed to fetch countries:", data.message);
+          }
+        } catch (err) {
+          console.error("Error fetching countries:", err);
+        } finally {
+          
+        }
+      };
+      fetchCountries();
+    }, []);
 
   // generate unique id for files
   const uid = () => Math.random().toString(36).slice(2, 9) + Date.now().toString(36);
@@ -108,13 +118,13 @@ const AddExpenseDialog: React.FC<DialogProps> = ({ isOpen, onClose, onSave }) =>
       const formData = new FormData();
       formData.append("amount", amount);
       formData.append("category", category);
-      formData.append("countryId", "43389dd9-38b6-4338-b3fb-d64fb9eef5cb");
+      formData.append("countryId", country);
       formData.append("notes", description);
       formData.append("date", new Date().toISOString());
-      formData.append("submittedById", "ca9aed80-8cd5-43dd-8ef6-84889fdb71f3"); // replace with actual user ID
+      formData.append("submittedById", userData.id); // replace with actual user ID
 
       files.forEach((f) => formData.append("invoiceUrl", f.file));
-
+      axios.defaults.withCredentials=true;
       const res = await axios.post(`${API}/api/v1/expenses`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
@@ -194,9 +204,9 @@ const AddExpenseDialog: React.FC<DialogProps> = ({ isOpen, onClose, onSave }) =>
                 <SelectValue placeholder="Select country" />
               </SelectTrigger>
               <SelectContent>
-                {COUNTRIES.map((c) => (
-                  <SelectItem key={c} value={c}>
-                    {c}
+                {countries.map((c:any) => (
+                  <SelectItem key={c?.id} value={c?.id}>
+                    {c?.countryName}
                   </SelectItem>
                 ))}
               </SelectContent>
